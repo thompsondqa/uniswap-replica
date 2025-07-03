@@ -5,10 +5,10 @@ export default function TokenModal({ isOpen, onClose, onSelect }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 flex justify-center items-center">
-      <div className="bg-white rounded-2xl p-6 w-80 shadow-xl">
-        <h2 className="text-xl font-bold mb-4">Select a token</h2>
-        <ul>
+    <div className="fixed inset-0 z-50 bg-black/60 flex justify-center items-center">
+      <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-3xl p-8 w-96 shadow-2xl">
+        <h2 className="text-2xl font-bold text-white mb-6">Select a token</h2>
+        <ul className="space-y-2">
           {TOKENS.map((token) => (
             <li
               key={token.symbol}
@@ -16,14 +16,19 @@ export default function TokenModal({ isOpen, onClose, onSelect }) {
                 onSelect(token);
                 onClose();
               }}
-              className="cursor-pointer p-3 rounded hover:bg-gray-100"
+              className="cursor-pointer flex items-center justify-between p-4 rounded-2xl bg-[#232336] hover:bg-[#2D2F36] transition"
             >
-              <div className="font-semibold">{token.symbol}</div>
-              <div className="text-sm text-gray-500">{token.name}</div>
+              <div>
+                <div className="font-semibold text-white">{token.symbol}</div>
+                <div className="text-xs text-gray-300">{token.name}</div>
+              </div>
             </li>
           ))}
         </ul>
-        <button onClick={onClose} className="mt-4 w-full bg-red-500 text-white p-2 rounded">
+        <button
+          onClick={onClose}
+          className="mt-6 w-full bg-gradient-to-r from-[#FF5B99] to-[#6C47FF] text-white font-semibold py-3 rounded-2xl shadow hover:opacity-90 transition"
+        >
           Close
         </button>
       </div>

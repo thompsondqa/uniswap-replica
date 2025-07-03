@@ -22,10 +22,16 @@ export default function App() {
   useEffect(() => {
     if (selectedToken && address && provider) {
       getTokenBalance(selectedToken, address, provider).then(setBalance);
+    } else {
+      setBalance(null);
     }
-  }, [selectedToken, address]);
+  }, [selectedToken, address, provider]);
 
   const sendToken = async () => {
+    if (!authenticated) {
+      login();
+      return;
+    }
     const signer = provider.getSigner();
     const parsedAmount = ethers.utils.parseUnits(amount, selectedToken.decimals);
 
@@ -45,57 +51,101 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-white flex flex-col items-center justify-center p-6">
-      <h1 className="text-4xl font-bold text-indigo-600 mb-6">Uniswap-style Modal</h1>
+    <div className="min-h-screen bg-gradient-to-br from-[#2D2F36] to-[#232336] flex flex-col items-center justify-center p-6">
+      {/* Header */}
+      <header className="flex items-center gap-2 mb-10">
+        <img src="https://app.uniswap.org/favicon.ico" alt="Logo" className="w-10 h-10 rounded-full" />
+        <h1 className="text-3xl font-bold text-white tracking-tight">Rockstar Modal</h1>
+      </header>
 
-      <button
-        onClick={() => (authenticated ? logout() : login())}
-        className="mb-4 bg-indigo-600 text-white px-6 py-2 rounded-full"
-      >
-        {authenticated ? 'Disconnect Wallet' : 'Connect Wallet'}
-      </button>
+      {/* Main Card */}
+      <div className="w-full max-w-md bg-white/10 backdrop-blur-lg border border-white/20 rounded-3xl shadow-2xl p-8 flex flex-col items-center">
+        <button
+          onClick={() => (authenticated ? logout() : login())}
+          className="mb-6 w-full bg-gradient-to-r from-[#6C47FF] to-[#FF5B99] text-white font-semibold px-6 py-3 rounded-2xl shadow hover:opacity-90 transition"
+        >
+          {authenticated ? 'Disconnect Wallet' : 'Connect Wallet'}
+        </button>
 
-      {authenticated && (
-        <>
-          <div className="flex gap-4 items-center mb-4">
-            <button
-              onClick={() => setShowModal(true)}
-              className="bg-purple-500 text-white px-4 py-2 rounded-full"
-            >
-              {selectedToken ? selectedToken.symbol : 'Select Token'}
-            </button>
+        {/* Swap Box - Always visible */}
+        <div className="w-full">
+          <div className="bg-[#232336] rounded-2xl p-6 shadow-lg border border-white/10">
+            {/* From Panel */}
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-sm text-gray-300">From</span>
+              {selectedToken && authenticated && (
+                <span className="text-xs text-gray-400">
+                  Balance: <span className="font-semibold">{balance}</span>
+                </span>
+              )}
+            </div>
+            <div className="flex items-center gap-3 mb-2">
+              <button
+                onClick={() => setShowModal(true)}
+                className="flex items-center gap-2 bg-[#2D2F36] hover:bg-[#383a42] text-white px-4 py-2 rounded-xl font-semibold border border-white/10 shadow transition"
+                disabled={!authenticated}
+              >
+                {selectedToken ? (
+                  <>
+                    {/* Optionally add a token logo here */}
+                    <span>{selectedToken.symbol}</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Select Token</span>
+                  </>
+                )}
+                <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7"></path></svg>
+              </button>
+              <input
+                type="number"
+                placeholder="0.0"
+                value={amount}
+                onChange={e => setAmount(e.target.value)}
+                className="flex-1 bg-transparent text-2xl text-white font-bold outline-none px-2"
+                style={{ minWidth: 0 }}
+                disabled={!authenticated || !selectedToken}
+              />
+            </div>
 
-            {selectedToken && (
-              <div className="text-sm text-gray-700">
-                Balance: <span className="font-semibold">{balance}</span>
-              </div>
-            )}
-          </div>
-
-          {selectedToken && (
-            <div className="space-y-3 w-full max-w-sm">
+            {/* To Panel */}
+            <div className="flex items-center justify-between mt-6 mb-2">
+              <span className="text-sm text-gray-300">To</span>
+            </div>
+            <div className="flex items-center gap-3">
               <input
                 placeholder="Recipient address"
                 value={recipient}
                 onChange={e => setRecipient(e.target.value)}
-                className="w-full border px-3 py-2 rounded"
+                className="w-full bg-[#2D2F36] text-white border border-white/10 px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6C47FF] transition"
+                disabled={!authenticated}
               />
-              <input
-                placeholder="Amount"
-                value={amount}
-                onChange={e => setAmount(e.target.value)}
-                className="w-full border px-3 py-2 rounded"
-              />
-              <button
-                onClick={sendToken}
-                className="w-full bg-green-600 text-white p-2 rounded"
-              >
-                Send {selectedToken.symbol}
-              </button>
             </div>
-          )}
-        </>
-      )}
+
+            {/* Swap/Send Button */}
+            <button
+              onClick={sendToken}
+              disabled={
+                !authenticated ||
+                !selectedToken ||
+                !amount ||
+                !recipient
+              }
+              className={`w-full mt-6 bg-gradient-to-r from-[#6C47FF] to-[#FF5B99] text-white font-bold py-3 rounded-2xl shadow hover:opacity-90 transition ${
+                (!authenticated || !selectedToken || !amount || !recipient)
+                  ? 'opacity-60 cursor-not-allowed'
+                  : ''
+              }`}
+            >
+              {!authenticated
+                ? 'Connect Wallet to Swap'
+                : selectedToken
+                ? `Send ${selectedToken.symbol}`
+                : 'Select Token'}
+            </button>
+          </div>
+        </div>
+      </div>
 
       <TokenModal
         isOpen={showModal}
