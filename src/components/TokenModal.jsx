@@ -1,5 +1,5 @@
-import React from 'react';
-import { TOKENS } from '../utils/constants';
+import React from "react";
+import { TOKENS } from "../utils/constants";
 
 export default function TokenModal({ isOpen, onClose, onSelect }) {
   if (!isOpen) return null;

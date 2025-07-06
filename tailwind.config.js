@@ -6,8 +6,8 @@ export default {
   ],
   theme: {
     extend: {
-      colors: {
-        brandDark: "#0b0b0d",
+        backgroundImage: {
+        'hero-pattern': "url('/bg.webp')",
         brandBlue: "#125795",
       },
       fontFamily :{
@@ -18,4 +18,3 @@ export default {
   },
   plugins: [],
 }
-
