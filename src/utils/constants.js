@@ -2,13 +2,13 @@ export const TOKENS = [
   {
     symbol: 'ETH',
     name: 'Sepolia Ether',
-    address: '0x0000000000000000000000000000000000000000',
+    address: '0x4200000000000000000000000000000000000006',
     decimals: 18,
   },
   {
     symbol: 'WETH',
     name: 'Wrapped Ether',
-    address: '0xdd13E55209Fd76AfE204dBda4007C227904f0a81',
+    address: '0x4200000000000000000000000000000000000006',
     decimals: 18,
   },
 ];

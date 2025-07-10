@@ -82,7 +82,7 @@ export default function App() {
     <div
       className="flex flex-col items-center justify-center h-screen"
       style={{
-        backgroundImage: "url('./img/realbg.png')",
+        backgroundImage: "url(./img/bg2.jpg)",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -260,7 +260,7 @@ export default function App() {
                 className="w-full bg-gradient-to-r from-[#FF5B99] to-[#6C47FF] text-white font-bold py-3 rounded-2xl shadow hover:opacity-90 transition"
                 disabled={!fromAmount || !fromToken || !toToken}
               >
-                Get started
+                Swap
               </button>
             )}
           </div>
